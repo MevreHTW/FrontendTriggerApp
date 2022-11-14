@@ -10,7 +10,7 @@
           <li class="nav-item">
             <router-link class="nav-link" to="/">Home</router-link>
             <router-link class="nav-link" to="/about">Über uns</router-link>
-            <router-link class="nav-link" to="/my-triggers">Meine Trigger</router-link>
+            <router-link class="nav-link" to="/my-triggers">Meine Trigger Test</router-link>
 
           </li>
         </ul>
