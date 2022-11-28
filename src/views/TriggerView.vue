@@ -103,7 +103,9 @@
 <script>
 export default {
   name: "Triggerliste",
-  data: () => ({ name: "", score: "", allTriggers: [] }),
+  data: () => ({ datum: "", triggerBeschreibung: "", skala: null,
+        emotion:"", ort:"", auswirkungEmotion:"", skalaNachIntervention: null,
+    allTriggers: [] }),
   computed: {
     sortedList: function() {
       return this.allTriggers.slice().sort(function(a, b) {
@@ -134,6 +136,20 @@ export default {
       this.skalaNachIntervention = null
     },
   },
+
+  mounted () {
+    const requestOptions = {
+      method: 'GET',
+      redirect: 'follow'
+    }
+
+    fetch('http://localhost:8080/api/v1/trigger', requestOptions)
+    .then(response => response.json())
+    .then(result => console.log(result))
+    .catch(error => console.log('error', error))
+
+  }
+
 };
 </script>
 
