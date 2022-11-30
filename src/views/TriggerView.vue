@@ -1,5 +1,3 @@
-
-
 <template>
   <div class="container">
     <h1 class="mt-4 text-center">Hier ist deine Triggerliste</h1>
@@ -10,6 +8,7 @@
           type="text"
           placeholder="22.02.2022"
           v-model="datum"
+          required
           class="form-control"
         />
       </div>
@@ -19,17 +18,22 @@
           type="text"
           placeholder="Zum Beispiel: Mit harschen Worten beleidigt werden"
           v-model="triggerBeschreibung"
+          required
           class="form-control"
         />
       </div>
-      <div class="form-group">
+      <div class="form-group needs-validation" novalidate>
         <label >Skala vor Intervention</label>
         <input
           type="number"
           placeholder="Auf einer Skala von -10 bis 10"
           v-model="skala"
+          required
           class="form-control"
         />
+        <div class="invalid-feedback">
+          Bitte gebe eine Zahl zwischen -10 bis 10.
+        </div>
       </div>
       <div class="form-group">
         <label >Gefühlte Emotionen</label>
@@ -37,6 +41,7 @@
           type="text"
           placeholder="Zum Beispiel: Bauchschmerzen"
           v-model="emotion"
+          required
           class="form-control"
         />
       </div>
@@ -46,6 +51,7 @@
           type="text"
           placeholder="Wo ist es dir passiert? Zum Beispiel: Im Supermarkt"
           v-model="ort"
+          required
           class="form-control"
         />
       </div>
@@ -55,6 +61,7 @@
           type="text"
           placeholder="Wo spürst du die Emotionen? Zum Beispiel: Im Bauch"
           v-model="auswirkungEmotion"
+          required
           class="form-control"
         />
       </div>
@@ -64,11 +71,12 @@
           type="number"
           placeholder="Nachdem du deine Übung gemacht hast. Auf einer Skala von -10 bis 10"
           v-model="skalaNachIntervention"
+          required
           class="form-control"
         />
       </div>
       <button type="button" @click="onSubmit" class="btn btn-dark">
-        Trigger erstellen
+        Trigger hinterlegen
       </button>
 
     </form>
@@ -127,16 +135,6 @@ export default {
         skalaNachIntervention: this.skalaNachIntervention
       });
       this.clearForm();
-    },
-
-    clearForm() {
-      this.datum = "";
-      this.triggerBeschreibung = "";
-      this.skala = null;
-      this.emotion = "";
-      this.ort = "";
-      this.auswirkungEmotion = "";
-      this.skalaNachIntervention = null
     },
 
     clearForm() {
