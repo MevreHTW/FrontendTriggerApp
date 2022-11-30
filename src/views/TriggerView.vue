@@ -68,8 +68,9 @@
         />
       </div>
       <button type="button" @click="onSubmit" class="btn btn-dark">
-        Submit
+        Trigger erstellen
       </button>
+
     </form>
     <table class="table mt-5">
       <thead>
@@ -82,6 +83,7 @@
         <th scope="col">Der Ort</th>
         <th scope="col">Körperliche Auswirkung der Emotion</th>
         <th scope="col">Skala nach Intervention</th>
+        <th scope="col">Trigger löschen</th>
       </tr>
       </thead>
       <tbody>
@@ -126,6 +128,7 @@ export default {
       });
       this.clearForm();
     },
+
     clearForm() {
       this.datum = "";
       this.triggerBeschreibung = "";
@@ -135,7 +138,44 @@ export default {
       this.auswirkungEmotion = "";
       this.skalaNachIntervention = null
     },
+
+    clearForm() {
+      this.datum = "";
+      this.triggerBeschreibung = "";
+      this.skala = null;
+      this.emotion = "";
+      this.ort = "";
+      this.auswirkungEmotion = "";
+      this.skalaNachIntervention = null
+    },
+
+    createTrigger() {
+
+      var myHeaders = new Headers();
+      myHeaders.append('Content-Type', 'application/json');
+
+      var raw = JSON.stringify({
+        datum: this.datum,
+        triggerBeschreibung: this.triggerBeschreibung,
+        skala: this.skala,
+        emotion: this.emotion,
+        ort: this.ort,
+        auswirkungEmotion: this.auswirkungEmotion,
+        skalaNachIntervention: this.skalaNachIntervention
+      });
+
+      var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+      };
+
+      fetch("http://localhost:8080/api/v1/trigger", requestOptions)
+        .catch(error => console.log('error', error));
+    }
   },
+
 
   mounted () {
     const requestOptions = {
@@ -145,7 +185,10 @@ export default {
 
     fetch('http://localhost:8080/api/v1/trigger', requestOptions)
     .then(response => response.json())
-    .then(result => console.log(result))
+    .then(result => result.forEach(trigger => {
+      this.allTriggers.push(trigger)
+    }))
+
     .catch(error => console.log('error', error))
 
   }
