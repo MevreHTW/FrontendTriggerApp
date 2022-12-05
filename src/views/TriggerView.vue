@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <h1 class="mt-4 text-center">Hier ist deine Triggerliste</h1>
-    <form>
+    <form class="needs-validation" id="trigger-create-form">
       <div class="form-group">
         <label >Datum</label>
         <input
@@ -22,7 +22,7 @@
           class="form-control"
         />
       </div>
-      <div class="form-group needs-validation" novalidate>
+      <div class="form-group">
         <label >Skala vor Intervention</label>
         <input
           type="number"
@@ -75,7 +75,7 @@
           class="form-control"
         />
       </div>
-      <button type="button" @click="onSubmit" class="btn btn-dark">
+      <button type="submit" @click="onSubmit" class="btn btn-dark">
         Trigger hinterlegen
       </button>
 
@@ -104,6 +104,7 @@
         <td>{{ entry.ort }}</td>
         <td>{{ entry.auswirkungEmotion }}</td>
         <td>{{ entry.skalaNachIntervention }}</td>
+        <td><button @click="deleteTrigger(entry.id, i - 1)">Löschen</button></td>
       </tr>
       </tbody>
     </table>
@@ -124,17 +125,41 @@ export default {
     },
   },
   methods: {
+    deleteTrigger(id, index) {
+      console.log(`delete ${id} / ${index}`)
+      this.allTriggers.splice(index, 1);
+      var requestOptions = {
+        method: 'DELETE',
+        redirect: 'follow'
+      };
+
+      fetch("http://localhost:8080/api/v1/trigger/"+ id, requestOptions)
+        .then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
+    },
     onSubmit() {
-      this.allTriggers.push({
-        datum: this.datum,
-        triggerBeschreibung: this.triggerBeschreibung,
-        skala: this.skala,
-        emotion: this.emotion,
-        ort: this.ort,
-        auswirkungEmotion: this.auswirkungEmotion,
-        skalaNachIntervention: this.skalaNachIntervention
-      });
-      this.clearForm();
+      const valid = this.validate()
+      if (valid) {
+        console.log("is valid")
+        this.allTriggers.push({
+          datum: this.datum,
+          triggerBeschreibung: this.triggerBeschreibung,
+          skala: this.skala,
+          emotion: this.emotion,
+          ort: this.ort,
+          auswirkungEmotion: this.auswirkungEmotion,
+          skalaNachIntervention: this.skalaNachIntervention
+        });
+        this.clearForm();
+      }
+
+    },
+
+    validate () {
+      const form = document.getElementById('trigger-create-form')
+      form.classList.add('was-validated')
+      return form.checkValidity()
     },
 
     clearForm() {
