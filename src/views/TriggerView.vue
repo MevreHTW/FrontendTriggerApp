@@ -115,7 +115,7 @@
 export default {
   name: "Triggerliste",
   data: () => ({ datum: "", triggerBeschreibung: "", skala: null,
-        emotion:"", ort:"", auswirkungEmotion:"", skalaNachIntervention: null,
+    emotion:"", ort:"", auswirkungEmotion:"", skalaNachIntervention: null,
     allTriggers: [] }),
   computed: {
     sortedList: function() {
@@ -132,7 +132,6 @@ export default {
         method: 'DELETE',
         redirect: 'follow'
       };
-
       fetch("http://localhost:8080/api/v1/trigger/"+ id, requestOptions)
         .then(response => response.text())
         .then(result => console.log(result))
@@ -151,17 +150,37 @@ export default {
           auswirkungEmotion: this.auswirkungEmotion,
           skalaNachIntervention: this.skalaNachIntervention
         });
-        this.clearForm();
+
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var raw = JSON.stringify({
+          datum: this.datum,
+          triggerBeschreibung: this.triggerBeschreibung,
+          skala: this.skala,
+          emotion: this.emotion,
+          ort: this.ort,
+          auswirkungEmotion: this.auswirkungEmotion,
+          skalaNachIntervention: this.skalaNachIntervention
+        });
+        var requestOptions = {
+          method: 'POST',
+          headers: myHeaders,
+          body: raw,
+          redirect: 'follow'
+        };
+
+        fetch("http://localhost:8080/api/v1/trigger", requestOptions)
+          .then(response => response.text())
+          .then(result => console.log(result))
+          .catch(error => console.log('error', error));
       }
-
     },
-
     validate () {
       const form = document.getElementById('trigger-create-form')
       form.classList.add('was-validated')
       return form.checkValidity()
     },
-
     clearForm() {
       this.datum = "";
       this.triggerBeschreibung = "";
@@ -171,12 +190,9 @@ export default {
       this.auswirkungEmotion = "";
       this.skalaNachIntervention = null
     },
-
     createTrigger() {
-
       var myHeaders = new Headers();
       myHeaders.append('Content-Type', 'application/json');
-
       var raw = JSON.stringify({
         datum: this.datum,
         triggerBeschreibung: this.triggerBeschreibung,
@@ -186,39 +202,30 @@ export default {
         auswirkungEmotion: this.auswirkungEmotion,
         skalaNachIntervention: this.skalaNachIntervention
       });
-
       var requestOptions = {
         method: 'POST',
         headers: myHeaders,
         body: raw,
         redirect: 'follow'
       };
-
       fetch("http://localhost:8080/api/v1/trigger", requestOptions)
         .catch(error => console.log('error', error));
     }
   },
-
-
   mounted () {
     const requestOptions = {
       method: 'GET',
       redirect: 'follow'
     }
-
     fetch('http://localhost:8080/api/v1/trigger', requestOptions)
-    .then(response => response.json())
-    .then(result => result.forEach(trigger => {
-      this.allTriggers.push(trigger)
-    }))
-
-    .catch(error => console.log('error', error))
-
+      .then(response => response.json())
+      .then(result => result.forEach(trigger => {
+        this.allTriggers.push(trigger)
+      }))
+      .catch(error => console.log('error', error))
   }
-
 };
 </script>
 
 <style scoped>
-
 </style>
