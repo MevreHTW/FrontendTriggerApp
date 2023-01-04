@@ -75,6 +75,8 @@
           class="form-control"
         />
       </div>
+      <p>
+      </p>
       <button type="submit" @click="onSubmit" class="btn btn-dark">
         Trigger hinterlegen
       </button>
@@ -92,6 +94,7 @@
         <th scope="col">Körperliche Auswirkung der Emotion</th>
         <th scope="col">Skala nach Intervention</th>
         <th scope="col">Trigger löschen</th>
+        <th scope="col">Trigger durchgefühlt</th>
       </tr>
       </thead>
       <tbody>
@@ -105,6 +108,11 @@
         <td>{{ entry.auswirkungEmotion }}</td>
         <td>{{ entry.skalaNachIntervention }}</td>
         <td><button @click="deleteTrigger(entry.id, i - 1)">Löschen</button></td>
+        <div class="form-check d-flex justify-content-center align-items-center">
+          <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+          <label class="form-check-label" for="flexCheckDefault">
+          </label>
+        </div>
       </tr>
       </tbody>
     </table>
@@ -150,10 +158,8 @@ export default {
           auswirkungEmotion: this.auswirkungEmotion,
           skalaNachIntervention: this.skalaNachIntervention
         });
-
         var myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
-
         var raw = JSON.stringify({
           datum: this.datum,
           triggerBeschreibung: this.triggerBeschreibung,
@@ -169,7 +175,6 @@ export default {
           body: raw,
           redirect: 'follow'
         };
-
         fetch("http://localhost:8080/api/v1/trigger", requestOptions)
           .then(response => response.text())
           .then(result => console.log(result))
